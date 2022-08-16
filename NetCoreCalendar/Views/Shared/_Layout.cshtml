@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="~/css/_variables.scss" />
     <link rel="stylesheet" href="~/css/_bootswatch.scss" />
 
-
     <!--Full Calendar-->
     <link rel="stylesheet" href="~/css/main.css" />
     <script src="~/js/main.js"> </script>
@@ -20,27 +19,27 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container-fluid">
-    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">NetCoreCalendar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarColor01">
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Home
-            <span class="visually-hidden">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </li>
-      </ul>
-     <partial name="_LoginPartial" />
-    </div>
-  </div>
-</nav>
-
+          <div class="container-fluid">
+              <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Lesson Planner - WEB NET6 </a>
+             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                  <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                      <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" asp-area="" asp-controller="" asp-action="">My Students</a>
+                    </li>
+                      <li class="nav-item">
+                      <a class="nav-link" asp-area="" asp-controller="" asp-action="">My Lessons</a>
+                    </li>
+                  </ul>
+             <partial name="_LoginPartial" />
+            </div>
+          </div>
+        </nav>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -50,7 +49,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - NetCoreCalendar - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - Lesson Planner - WEB NET6 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

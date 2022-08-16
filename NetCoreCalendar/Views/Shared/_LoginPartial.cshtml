@@ -1,6 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@using NetCoreCalendar.Data
+@inject SignInManager<Teacher> SignInManager
+@inject UserManager<Teacher> UserManager
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
