@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="~/css/bootstrap.css" />
     <link rel="stylesheet" href="~/css/_variables.scss" />
     <link rel="stylesheet" href="~/css/_bootswatch.scss" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/fontawesome.css" asp-append-version="true" />
 
     <!--Full Calendar-->
     <link rel="stylesheet" href="~/css/main.css" />
@@ -30,7 +33,7 @@
                       <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" asp-area="" asp-controller="" asp-action="">My Students</a>
+                      <a class="nav-link" asp-area="" asp-controller="Students" asp-action="Index">My Students</a>
                     </li>
                       <li class="nav-item">
                       <a class="nav-link" asp-area="" asp-controller="" asp-action="">My Lessons</a>
@@ -54,6 +57,9 @@
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/sweetalert/sweetalert.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

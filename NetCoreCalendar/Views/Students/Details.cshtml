@@ -1,0 +1,42 @@
+﻿@model StudentVM
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details of @Model.FirstName</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Goal)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Goal)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Rate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Rate)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-dark">Back to List</a>
+    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model?.Id">Edit</a>
+    
+</div>

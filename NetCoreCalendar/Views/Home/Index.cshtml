@@ -2,36 +2,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-<script>
-
-      document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-
-       var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
-           events: [
-         {
-           title  :  "Irina",
-           start  : '2022-08-14T10:30:00'
-         },
-         {
-           
-           start  : '2022-08-14T11:30:00',
-           title : "Andrii"
-           
-         }
-           ],
-          dateClick: function(info) {
-            $('#modalBody').html(info.dateStr);
-            $('#myModal').modal('show');
-           }
-        });
-
-        calendar.render();
-      });
-
-    </script>
-
 <div class="text-center">
     <h1 class="display-4">Welcome to Lesson Planner App!</h1>
      <div id='calendar'></div>
@@ -56,5 +26,38 @@
     </div>
 </div>
 </div>
+
+<a id="createLink" asp-controller="Students" asp-action="Create">
+</a>
+
+@section Scripts{
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+
+       var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+           events: [
+         {
+           title  :  "Irina",
+           start  : '2022-08-14T10:30:00'
+         },
+         {
+           
+           start  : '2022-08-14T11:30:00',
+           title : "Andrii"
+           
+         }
+           ],
+          dateClick: function(info) {
+            document.getElementById("createLink").click();
+           }
+        });
+
+        calendar.render();
+      });
+
+    </script>
+}
 
 
