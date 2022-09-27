@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using NetCoreCalendar.Data;
 using AutoMapper;
 using NetCoreCalendar.Configuration;
+using NetCoreCalendar.Contracts;
+using NetCoreCalendar.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<Teacher>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IStudentRepository,StudentRepository>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 builder.Services.AddControllersWithViews();

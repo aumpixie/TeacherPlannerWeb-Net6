@@ -18,5 +18,7 @@ namespace NetCoreCalendar.Models
         [DisplayFormat(ApplyFormatInEditMode = false, DataFormatString = "{0:C}")]
         public decimal Rate { get; set; }
 
+        // public string RequestingUserId { get; set; }
+
     }
 }
