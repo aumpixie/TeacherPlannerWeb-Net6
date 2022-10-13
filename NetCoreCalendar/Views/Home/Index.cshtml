@@ -1,61 +1,109 @@
-﻿@{
+﻿@model LessonCreateVM
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome to Lesson Planner App!</h1>
+</div>
      <div id='calendar'></div>
      <!-- Add Modal -->
 
-<div class="bs-example">
-    <div id="myModal" class="modal fade" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Modal Title</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
-                </div>
-                <div id="modalBody" class="modal-body">
-                    
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close Modal</button>
-                </div>
+<button type="button" id="lessonNew" class="btn btn-primary" onclick="fncShow();">
+    Launch demo modal
+</button>
+
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back to Calendar</button>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form asp-action="Create">
+                <div class="modal-body" id="divToPopulate">
+                    
+                
+                
+					@*Populate content here.*@
+				</div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back to Calendar</button>
+                <input type="submit" value="Create" id="formSubmission" class="btn btn-primary" />
+            </div>
+           </form>
         </div>
     </div>
 </div>
-</div>
 
-<a id="createLink" asp-controller="Students" asp-action="Create">
+
+<a id="createLink" asp-controller="Lessons" asp-action="Create">
 </a>
+
+
 
 @section Scripts{
     <script>
+        
       document.addEventListener('DOMContentLoaded', function() {
+
         var calendarEl = document.getElementById('calendar');
+        var date = new Date();
+        var dateStr = null;
 
        var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
-           events: [
-         {
-           title  :  "Irina",
-           start  : '2022-08-14T10:30:00'
-         },
-         {
            
-           start  : '2022-08-14T11:30:00',
-           title : "Andrii"
-           
-         }
-           ],
           dateClick: function(info) {
-            document.getElementById("createLink").click();
+            dateStr = info.dateStr;
+            localStorage.setItem('date', dateStr);
+            document.getElementById("lessonNew").click();
+            
            }
         });
-
+          
         calendar.render();
       });
+
+        function fncShow() {
+            $.ajax({
+                url: '@Url.Action("ShowDialog", "Home")',
+                type: "GET",
+                success: function (data) {  
+                    $('#divToPopulate').html(data);
+                    $('#exampleModal').modal('show');
+                },
+                error: function (a1) {
+                    console.log(a1);
+                }
+            });
+
+            $('#formSubmission').click(function (event) {
+                event.preventDefault();
+
+                var form = $(this).parents('#exampleModal').find('form');
+                var actionUrl = form.attr('action');
+                var dataToSend = form.serialize();
+                $.post(actionUrl, dataToSend).done(function (data) {
+                    // data is the rendered _ContactModalPartial
+                    // replace modal contents with new form
+                    var newBody = $('#divToPopulate').html(data);
+                    $('#exampleModal').find('#divToPopulate').replaceWith(newBody);
+                    var isValid = newBody.find('[name="IsValid"]').val();
+
+                    if (isValid != 'False') {
+                        $('#exampleModal').modal('hide');
+                    } else {
+                        alert("Oh no")
+                    }
+
+                });
+    
+            });
+        }
 
     </script>
 }

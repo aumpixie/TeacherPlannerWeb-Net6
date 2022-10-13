@@ -1,0 +1,61 @@
+﻿@model LessonsViewVM
+
+@{
+    ViewData["Title"] = "My Lessons";
+}
+
+<h1>My Lessons</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Lessons[0].Start)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lessons[0].End)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lessons[0].Student)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lessons[0].IsPaid)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lessons[0].Rate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Lessons) {
+        <tr>
+            <th>
+                @Html.DisplayFor(modelItem => item.Start)
+            </th>
+            <th>
+                @Html.DisplayFor(modelItem => item.End)
+            </th>
+            <th>
+                @Html.DisplayFor(modelItem => item.Student.FirstName)
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPaid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rate)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="MarkPaid" class="btn btn-success" asp-route-id="@item.Id">Paid</a> |
+
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

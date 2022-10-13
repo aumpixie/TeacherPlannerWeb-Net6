@@ -30,7 +30,7 @@ namespace NetCoreCalendar.Controllers
         // GET: Students
         public async Task<IActionResult> Index()   
         {
-            var students = mapper.Map<List<StudentVM>>(await studentRepository.GetAllAsync());
+            var students = await studentRepository.GetAllStudentsVMAsync();
               return _context.Students != null ? 
                           View(students) :
                           Problem("Entity set 'ApplicationDbContext.Students'  is null.");
@@ -39,13 +39,12 @@ namespace NetCoreCalendar.Controllers
         // GET: Students/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            var student = await studentRepository.GetAsync(id);
-            if (student == null)
+            var model = await studentRepository.GetStudentAsync(id);
+            if (model == null)
             {
                 return NotFound();
             }
-            var studentVM = mapper.Map<StudentVM>(student);
-            return View(studentVM);
+            return View(model);
         }
 
         // GET: Students/Create
@@ -59,27 +58,45 @@ namespace NetCoreCalendar.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(StudentVM studentVM)
+        public async Task<IActionResult> Create(StudentCreateVM model)
         {
             if (ModelState.IsValid)
             {
-                var student = mapper.Map<Student>(studentVM);
-                await studentRepository.AddAsync(student);
+                await studentRepository.CreateStudent(model);
                 return RedirectToAction(nameof(Index));
             }
-            return View(studentVM);
+            return View(model);
+        }
+
+        public IActionResult CreateForLesson()
+        {
+            return View();
+        }
+
+        // POST: Students/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateForLesson(StudentCreateVM model)
+        {
+            if (ModelState.IsValid)
+            {
+                await studentRepository.CreateStudent(model);
+                return RedirectToAction("Create", "Lessons");
+            }
+            return View(model);
         }
 
         // GET: Students/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            var student = await studentRepository.GetAsync(id);
-            if (student == null)
+            var model = await studentRepository.GetStudentToUpdateAsync(id);
+            if (model == null)
             {
                 return NotFound();
             }
-            var studentVM = mapper.Map<StudentVM>(student);
-            return View(studentVM);
+            return View(model);
         }
 
         // POST: Students/Edit/5
@@ -87,9 +104,9 @@ namespace NetCoreCalendar.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, StudentVM studentVM)
+        public async Task<IActionResult> Edit(int id, StudentCreateVM model)
         {
-            if (id != studentVM.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
@@ -98,12 +115,11 @@ namespace NetCoreCalendar.Controllers
             {
                 try
                 {
-                    var student = mapper.Map<Student>(studentVM);
-                    await studentRepository.UpdateAsync(student);
+                    await studentRepository.UpdateStudentAsync(model);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await studentRepository.Exists(studentVM.Id))
+                    if (!await studentRepository.Exists(model.Id))
                     {
                         return NotFound();
                     }
@@ -114,7 +130,7 @@ namespace NetCoreCalendar.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(studentVM);
+            return View(model);
         }
 
 

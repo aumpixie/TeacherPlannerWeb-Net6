@@ -1,0 +1,58 @@
+﻿@model LessonCreateVM
+
+
+
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input id="valueBox" name="IsValid" value="@ViewData.ModelState.IsValid.ToString()" />
+
+    <div class="form-group">
+        <label asp-for="StudentId" class="control-label"></label>
+        <select asp-for="StudentId" class="form-select" asp-items="Model?.Students">
+            <option>Select Student</option>
+        </select>
+        <span asp-validation-for="StudentId" class="text-danger"></span>
+    </div>
+    <div>
+        <a asp-controller="Students" asp-action="CreateForLesson">Add New Student</a>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"  id="description"> </textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartDate" class="control-label"></label>
+        <input asp-for="StartDate" class="form-control" id="theStartDate" />
+    </div>
+
+    <script>
+        var newDate = localStorage.getItem('date');
+        $("#theStartDate").attr("value", newDate);
+
+    </script>
+
+    <div class="form-group">
+        <label asp-for="StartTime" class="control-label"></label>
+        <input asp-for="StartTime" class="form-control" />
+        <span asp-validation-for="StartTime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EndTime" class="control-label"></label>
+        <input asp-for="EndTime" class="form-control" />
+        <span asp-validation-for="EndTime" class="text-danger"></span>
+    </div>
+    <br />
+    <div class="form-group">
+        <label asp-for="Rate" class="control-label"></label>
+    </div>
+    <div class="input-group mb-3">
+        <input asp-for="Rate" class="form-control" aria-describedby="button-addon2">
+        <span asp-validation-for="Rate" class="text-danger"></span>
+        <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off" asp-for="IsPaid">
+        <label class="btn btn-outline-success" for="btn-check-outlined" id="button-addon2"> Paid </label>
+    </div>
+
+
+

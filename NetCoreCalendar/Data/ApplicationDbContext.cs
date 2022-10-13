@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NetCoreCalendar.Configuration.Entities;
+using NetCoreCalendar.Models;
 
 namespace NetCoreCalendar.Data
 {
@@ -19,5 +20,6 @@ namespace NetCoreCalendar.Data
 
         public DbSet<Student> Students { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
+        public DbSet<NetCoreCalendar.Models.StudentCreateVM> StudentCreateVM { get; set; }
     }
 }
