@@ -1,16 +1,8 @@
 ﻿@model LessonCreateVM
 
-@{
-    ViewData["Title"] = "Edit";
-}
 
-
-<h4> Edit Lesson</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<input id="valueBox" name="IsValid" hidden="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
             <div class="form-group">
                 <label asp-for="StudentId" class="control-label"></label>
                 <select asp-for="StudentId" class="form-select" asp-items="Model?.Students">
@@ -24,9 +16,16 @@
             <div class="input-group mb-3">
                 <input asp-for="Rate" class="form-control" aria-describedby="button-addon2">
                 <span asp-validation-for="Rate" class="text-danger"></span>
-                <input type="checkbox" class="btn-check" id="btn-check-outlined" asp-for="IsPaid">
+                <input type="checkbox" name="IsPaid" checked="@Model?.IsPaid" value="true" class="btn-check" id="btn-check-outlined">
                 <label class="btn btn-outline-success" for="btn-check-outlined" id="button-addon2"> Paid </label>
             </div>
+
+            <script>
+                $("#student").change(function () {
+                    var status = this.value;
+                    document.getElementById("rate").value = status;
+                });
+            </script>
 
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -51,13 +50,7 @@
             </div>
             <br />
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <a asp-action="Index" class="btn btn-dark">Back to Lessons</a> &nbsp;
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+
 
 
 

@@ -1,33 +1,44 @@
-﻿@model LessonCreateVM
+﻿@using NetCoreCalendar.Constants
+@model LessonCreateVM
 
 @{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to Lesson Planner App!</h1>
-</div>
-     <div id='calendar'></div>
+
+@if (!User.IsInRole(Roles.User)){
+    <div class="text-center">
+        <h1 class="display-5">Welcome to Lesson Planner App!</h1>
+        <h4>Please, Log In to Open the Calendar and Plan your First Lesson!</h4>
+        <font color="purple">
+            <a asp-area="Identity" asp-page="/Account/Login">Login</a> or
+            <a asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </font>
+    </div>
+} else{
+     <div class="text-center">
+        <h4>Click any date in the calendar to add your Lesson!</h4>
+        </div>
+}
+    
+                         
+<div id='calendar'></div>
+
      <!-- Add Modal -->
 
-<button type="button" id="lessonNew" class="btn btn-primary" onclick="fncShow();">
-    Launch demo modal
-</button>
+<button type="button" id="lessonNew" hidden="hidden" class="btn btn-primary" onclick="fncShow();"> </button>
+<button type="button" class="btn btn-primary" hidden="hidden" id="lessonEdit" onclick="fncEdit();"></button>
 
-<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back to Calendar</button>
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add Lesson</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form asp-action="Create">
                 <div class="modal-body" id="divToPopulate">
-                    
-                
-                
 					@*Populate content here.*@
 				</div>
             <div class="modal-footer">
@@ -39,11 +50,33 @@
     </div>
 </div>
 
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Lesson</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="Edit">
+                <div class="modal-body" id="divToPopulateEdit">
+                    @*Populate content here.*@
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-danger deleteBtn" type="button"><i class="fa-solid fa-trash-can"></i></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back to Calendar</button>
+                    <input type="submit" value="Save" id="formEditSubmission" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <a id="createLink" asp-controller="Lessons" asp-action="Create">
 </a>
 
-
+<form id="deleteForm" asp-action="Delete">
+    <input type="hidden" id="lessonIdDelete" name="Id" />
+</form>
 
 @section Scripts{
     <script>
@@ -56,17 +89,32 @@
 
        var calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
-           
-          dateClick: function(info) {
-            dateStr = info.dateStr;
-            localStorage.setItem('date', dateStr);
-            document.getElementById("lessonNew").click();
-            
-           }
+                events: @Html.Raw(ViewData["Events"]),
+                resources: @Html.Raw(ViewData["Resources"]),
+                eventTimeFormat: { // like '14:30'
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: false
+                },
+                dateClick: function (info) {
+                    dateStr = info.dateStr;
+                    localStorage.setItem('date', dateStr);
+                    document.getElementById("lessonNew").click();
+                },
+                eventClick: function (info) {                   
+                    sessionStorage.setItem('eventId', info.event.id);
+                    document.getElementById("lessonEdit").click();
+                    }
         });
           
         calendar.render();
       });
+
+        var checkAction = sessionStorage.getItem('action');
+        if (checkAction == "backToModal") {
+            document.getElementById("lessonNew").click();
+            sessionStorage.setItem('action', null);
+        }
 
         function fncShow() {
             $.ajax({
@@ -88,7 +136,6 @@
                 var actionUrl = form.attr('action');
                 var dataToSend = form.serialize();
                 $.post(actionUrl, dataToSend).done(function (data) {
-                    // data is the rendered _ContactModalPartial
                     // replace modal contents with new form
                     var newBody = $('#divToPopulate').html(data);
                     $('#exampleModal').find('#divToPopulate').replaceWith(newBody);
@@ -96,15 +143,63 @@
 
                     if (isValid != 'False') {
                         $('#exampleModal').modal('hide');
-                    } else {
-                        alert("Oh no")
-                    }
-
-                });
-    
+                        window.location.reload();
+                    } 
+                });    
             });
         }
 
+        function fncEdit() {
+            var eventId = sessionStorage.getItem('eventId');
+
+            $.ajax({
+                url: '/Home/Edit/'+ eventId,
+                type: "GET",
+                success: function (data) {
+                    $('#divToPopulateEdit').html(data);
+                    $('#editModal').modal('show');
+                },
+                error: function (a1) {
+                    console.log(a1);
+                }
+            });
+
+
+            $('#formEditSubmission').click(function (event) {
+                event.preventDefault();
+
+                var form = $(this).parents('#editModal').find('form');
+                var actionUrl = form.attr('action');
+                var dataToSend = form.serialize();
+                $.post(actionUrl, dataToSend).done(function (data) {
+                    // replace modal contents with new form
+                    var newBody = $('#divToPopulateEdit').html(data);
+                    $('#editModal').find('#divToPopulateEdit').replaceWith(newBody);
+                    var isValid = newBody.find('[name="IsValid"]').val();
+
+                    if (isValid != 'False') {
+                        $('#editModal').modal('hide');
+                        window.location.reload();
+                    }
+                });
+            });
+
+            $('.deleteBtn').click(function (e) {
+                swal({
+                    text: "Are you sure you want to delete this record?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                }).then((confirm) => {
+                    if (confirm) {
+                        var btn = $(this);
+                        var id = parseInt(eventId);
+                        $('#lessonIdDelete').val(id);
+                        $('#deleteForm').submit();
+                    }
+                });
+            });
+        }
     </script>
 }
 

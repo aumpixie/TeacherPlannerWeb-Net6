@@ -13,6 +13,7 @@ namespace NetCoreCalendar.Configuration
             CreateMap<Student, StudentVM>().ReverseMap();
             CreateMap<Lesson, LessonCreateVM>().ReverseMap();
             CreateMap<Lesson, LessonVM>().ReverseMap();
+            CreateMap<Lesson, LessonDetailsVM>().ReverseMap();
         }
     }
 }

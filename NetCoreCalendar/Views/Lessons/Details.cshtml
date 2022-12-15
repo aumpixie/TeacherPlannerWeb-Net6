@@ -1,20 +1,37 @@
-﻿@model NetCoreCalendar.Data.Lesson
+﻿@model LessonDetailsVM
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
 
 <div>
-    <h4>Lesson</h4>
+    <h4> Details of Lesson</h4>
     <hr />
     <dl class="row">
+         <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartTime)
+        </dd>
+          <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.EndTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.EndTime)
+        </dd>
+          <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Student)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Student.Id)
+            @Html.DisplayFor(model => model.Student.FirstName)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
@@ -29,12 +46,6 @@
             @Html.DisplayFor(model => model.IsPaid)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.RequestingUserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.RequestingUserId)
-        </dd>
-        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Rate)
         </dt>
         <dd class = "col-sm-10">
@@ -43,6 +54,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-dark">Back to Students</a> &nbsp;
+    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model?.Id"> Edit </a>   
 </div>

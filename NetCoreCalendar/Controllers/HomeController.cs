@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using NetCoreCalendar.Contracts;
 using NetCoreCalendar.Data;
+using NetCoreCalendar.Helpers;
 using NetCoreCalendar.Models;
 using NetCoreCalendar.Repositories;
 using System.Diagnostics;
@@ -25,8 +28,23 @@ namespace NetCoreCalendar.Controllers
             this.context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            try
+            {
+                var studentsVM = await studentRepository.GetAllStudentsVMAsync();
+                var lessonsVM = await lessonRepository.GetAllLessonsForCalendarAsync();
+                if (studentsVM != null && lessonsVM != null)
+                {
+                    ViewData["Resources"] = JSONListHelper.GetResourceListJSONString(studentsVM);
+                    ViewData["Events"] = JSONListHelper.GetEventListJSONString(lessonsVM);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "Please, log in to use the calendar");
+            }
+
             return View();
         }
 
@@ -42,11 +60,12 @@ namespace NetCoreCalendar.Controllers
             if (ModelState.IsValid)
             {
                 await lessonRepository.CreateLesson(model);
-                return PartialView("Dummy", model);
+                return PartialView("_CreateLesson", model);
             }
             var students = await studentRepository.GetAllStudentsAsync();
             model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
-            return PartialView("Dummy", model);
+            model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
+            return PartialView("_CreateLesson", model);
         }
 
         public async Task<PartialViewResult> ShowDialog()
@@ -55,8 +74,72 @@ namespace NetCoreCalendar.Controllers
             var model = new LessonCreateVM
             {
                 Students = new SelectList(students, "Id", "FirstName"),
+                Rates = new SelectList(students, "Id", "Rate")
             };
-            return PartialView("Dummy", model);
+            return PartialView("_CreateLesson", model);
+        }
+
+        public async Task<PartialViewResult> Edit(int? id)
+        {
+            var model = await lessonRepository.GetLessonToUpdateAsync(id);
+            var students = await studentRepository.GetAllStudentsAsync();
+            model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
+            model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
+            return PartialView("_Edit", model);
+        }
+
+        // POST: Home/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, LessonCreateVM model)
+        {
+            if (id != model.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await lessonRepository.UpdateLessonAsync(model);
+                    return PartialView("_Edit", model);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!LessonExists(model.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return PartialView("_Edit", model);
+            }
+            var students = await studentRepository.GetAllStudentsAsync();
+            model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
+            model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
+            return PartialView("_Edit", model);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (context.Lessons == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Lessons'  is null.");
+            }
+            await lessonRepository.DeleteAsync(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        private bool LessonExists(int id)
+        {
+            return context.Lessons.Any(e => e.Id == id);
         }
 
 

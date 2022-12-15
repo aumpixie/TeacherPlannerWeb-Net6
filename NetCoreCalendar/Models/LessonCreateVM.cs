@@ -8,6 +8,7 @@ namespace NetCoreCalendar.Models
 {
     public class LessonCreateVM : IValidatableObject
     {
+        public int Id { get; set; }
 
         [Required]
         [Display(Name = "Student")]
@@ -19,7 +20,9 @@ namespace NetCoreCalendar.Models
 
         public decimal? Rate { get; set; }
 
-        [Required]
+        [ForeignKey("StudentId")]
+        public SelectList? Rates { get; set; }
+
         public string? Description { get; set; }
 
         [Required]
@@ -44,9 +47,12 @@ namespace NetCoreCalendar.Models
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            if (StudentId == 0)
+            if (StartTime > EndTime)
             {
-                yield return new ValidationResult("Choose a student", new[] { nameof(StudentId) });
+                yield return new ValidationResult("The Start Time must be Before the End Time", new[] { nameof(StartTime), nameof(EndTime) });
+            } else if(StartTime == EndTime)
+            {
+                yield return new ValidationResult("The Start Time and the End Time cannot be the same", new[] { nameof(StartTime), nameof(EndTime) });
             }
         }
     }

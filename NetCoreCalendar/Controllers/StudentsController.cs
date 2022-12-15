@@ -83,7 +83,7 @@ namespace NetCoreCalendar.Controllers
             if (ModelState.IsValid)
             {
                 await studentRepository.CreateStudent(model);
-                return RedirectToAction("Create", "Lessons");
+                return RedirectToAction("Index", "Home");
             }
             return View(model);
         }

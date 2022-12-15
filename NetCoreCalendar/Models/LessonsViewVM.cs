@@ -2,11 +2,11 @@
 {
     public class LessonsViewVM
     {
-        public LessonsViewVM(List<LessonVM> lessons)
+        public LessonsViewVM(List<LessonDetailsVM> lessons)
         {
             Lessons = lessons;
         }
 
-        public List<LessonVM> Lessons { get; set; }
+        public List<LessonDetailsVM> Lessons { get; set; }
     }
 }

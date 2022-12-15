@@ -34,12 +34,28 @@
             <br />
 
             <div class="form-group" asp-action="CreateForLesson">
-                <a asp-controller="Lessons" asp-action="Create" class="btn btn-dark">Back to Lesson</a> &nbsp;
-                <input type="submit" value="Create" class="btn btn-primary" />    
+                <a asp-controller="Home" asp-action="Index" class="btn btn-dark backBtn">Back to Lesson</a> &nbsp;
+                <input type="submit" value="Create" class="btn btn-primary createBtn" />    
             </div>
         </form>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        $(function () {
+            $('.backBtn').click(function (e) {
+                var action = "backToModal";
+                sessionStorage.setItem('action', action);
+            });
+            $('.createBtn').click(function (e) {
+                var action = "backToModal";
+                sessionStorage.setItem('action', action);
+            });
+        });
+
+     </script>
+}
 
 
 

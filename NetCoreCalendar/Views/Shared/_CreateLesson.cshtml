@@ -1,14 +1,12 @@
 ﻿@model LessonCreateVM
 
 
-
-
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-<input id="valueBox" name="IsValid" value="@ViewData.ModelState.IsValid.ToString()" />
+<input id="valueBox" name="IsValid" hidden="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
 
     <div class="form-group">
         <label asp-for="StudentId" class="control-label"></label>
-        <select asp-for="StudentId" class="form-select" asp-items="Model?.Students">
+        <select id="student" asp-for="StudentId" class="form-select" asp-items="Model?.Students">
             <option>Select Student</option>
         </select>
         <span asp-validation-for="StudentId" class="text-danger"></span>
@@ -16,6 +14,26 @@
     <div>
         <a asp-controller="Students" asp-action="CreateForLesson">Add New Student</a>
     </div>
+
+    <div class="form-group">
+        <label asp-for="Rate" class="control-label"></label>
+    </div>
+    <div class="input-group mb-3">
+        <select id="rate" asp-for="StudentId" class="form-select" asp-items="Model?.Rates" disabled>
+            <option>Lesson Rate</option>
+        </select>
+        <span asp-validation-for="StudentId" class="text-danger"></span>
+        <input type="checkbox" name="IsPaid" checked="@Model?.IsPaid" value="true" class="btn-check" id="btn-check-outlined">
+        <label class="btn btn-outline-success" for="btn-check-outlined" id="button-addon2">Paid</label>
+    </div>
+
+    <script>
+            $("#student").change(function () {
+                var status = this.value;
+                document.getElementById("rate").value = status;
+            });
+    </script>
+
     <div class="form-group">
         <label asp-for="Description" class="control-label"></label>
         <textarea asp-for="Description" class="form-control"  id="description"> </textarea>
@@ -44,15 +62,10 @@
         <span asp-validation-for="EndTime" class="text-danger"></span>
     </div>
     <br />
-    <div class="form-group">
-        <label asp-for="Rate" class="control-label"></label>
-    </div>
-    <div class="input-group mb-3">
-        <input asp-for="Rate" class="form-control" aria-describedby="button-addon2">
-        <span asp-validation-for="Rate" class="text-danger"></span>
-        <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off" asp-for="IsPaid">
-        <label class="btn btn-outline-success" for="btn-check-outlined" id="button-addon2"> Paid </label>
-    </div>
+
+
+
+
 
 
 
