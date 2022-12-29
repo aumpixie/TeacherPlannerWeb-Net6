@@ -75,8 +75,16 @@ namespace NetCoreCalendar.Controllers
         {
            if (ModelState.IsValid)
            {
+                if(await lessonRepository.ExistsDate(model) == false)
+                {
                     await lessonRepository.CreateLesson(model);
                     return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "You have already had a lesson this day at this time");
+                }
+                    
            }
             var students = await studentRepository.GetAllStudentsAsync();
             model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
@@ -92,6 +100,7 @@ namespace NetCoreCalendar.Controllers
             {
                 return NotFound();
             }
+
             var students = await studentRepository.GetAllStudentsAsync();
             model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
             model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
@@ -112,22 +121,29 @@ namespace NetCoreCalendar.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                if (await lessonRepository.ExistsDate(model) == false)
                 {
-                    await lessonRepository.UpdateLessonAsync(model);
+                    try
+                    {
+                        await lessonRepository.UpdateLessonAsync(model);
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!LessonExists(model.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!LessonExists(model.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError(string.Empty, "You have already had a lesson this day at this time");
                 }
-                return RedirectToAction(nameof(Index));
             }
             var students = await studentRepository.GetAllStudentsAsync();
             model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);

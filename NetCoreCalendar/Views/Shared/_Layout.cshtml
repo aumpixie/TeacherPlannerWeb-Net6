@@ -16,8 +16,10 @@
     <link rel="stylesheet" href="~/css/main.css" />
     <script src="~/js/main.js"> </script>
     
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/20.3.56/material.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/NetCoreCalendar.styles.css" asp-append-version="true" />
+    <script src="https://cdn.syncfusion.com/ej2/20.3.56/dist/ej2.min.js"></script>
 </head>
 <body>
     <header>
@@ -38,6 +40,9 @@
                       <li class="nav-item">
                       <a class="nav-link" asp-area="" asp-controller="Lessons" asp-action="Index">My Lessons</a>
                     </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index"> Income </a>
+                        </li>
                   </ul>
              <partial name="_LoginPartial" />
             </div>
@@ -66,7 +71,40 @@
         $(function () {
             $('.table').DataTable();
         });
+        
+            $('.deleteBtn').click(function (e) {
+                swal({
+                    text: "Are you sure you want to delete this record?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                }).then((confirm) => {
+                    if (confirm) {
+                        var btn = $(this);
+                        var id = btn.data("id");
+                        $('#recordId').val(id);
+                        $('#deleteForm').submit();
+                    }
+                });
+            });
+            $('.paidBtn').click(function (e) {
+                swal({
+                    text: "Are you sure you want to change this record?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                }).then((confirm) => {
+                    if (confirm) {
+                        var btn = $(this);
+                        var id = btn.data("id");
+                        $('#lessonPaidId').val(id);
+                        $('#paidForm').submit();
+                    }
+                });
+            });
+
     </script>
     @await RenderSectionAsync("Scripts", required: false)
+    <ejs-scripts></ejs-scripts>
 </body>
 </html>

@@ -1,0 +1,184 @@
+﻿
+@*Summary Widgets*@
+<br/>
+<br/>
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="d-flex flex-row widget summary income">
+            <div class="d-flex flex-column justify-content-center p-5">
+                <i class="fa fa-solid fa-dollar-sign fa-2xl"></i>
+            </div>
+            <div class="d-flex flex-column m-auto py-3">
+                <span class="lead"> 7 Days Income </span>
+                <h1 class="display-6 fw-bold">@ViewBag.TotalIncomeWeek</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="d-flex flex-row  widget summary income">
+            <div class="d-flex flex-column justify-content-center p-5">
+                <i class="fa fa-solid fa-dollar-sign fa-2xl"></i>
+            </div>
+            <div class="d-flex flex-column m-auto py-3">
+                <span class="lead"> Month Income </span>
+                <h1 class="display-6 fw-bold">@ViewBag.TotalIncomeMonth</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="d-flex flex-row widget summary income">
+            <div class="d-flex flex-column justify-content-center p-5">
+                <i class="fa fa-solid fa-dollar-sign fa-2xl"></i>
+            </div>
+            <div class="d-flex flex-column m-auto py-3">
+                <span class="lead"> Year Income </span>
+                <h1 class="display-6 fw-bold"> @ViewBag.TotalIncomeYear </h1>
+            </div>
+        </div>
+    </div>
+   </div>
+    <div class="text-center">
+    <h4 id="thisWeek"> This Week </h4>       
+    </div>
+
+    @*Dougnut Chart and Spline Chart*@
+   
+    <div class="row mb-4">
+        <div class=" col-md-4">
+            <div class="widget chart">
+                <div class="p-4">
+                    <h5 class="fw-bold"> Income By Student</h5>
+                    <ejs-accumulationchart id="doughnutchart" enableSmartLabels>
+                        <e-accumulation-series-collection>
+                            <e-accumulation-series dataSource="@ViewBag.DoughnutChartData"
+                                                   xName="StudentName" yName="Income" innerRadius="60%" legendShape="Circle"
+                                                   palettes=@(new string[]{"#a8e6cf","#dcedc1","#ffd3b6","#ffaaa5","#ff8b94"})>
+                                <e-accumulationseries-datalabel name="FormattedIncome" visible>
+                                </e-accumulationseries-datalabel>
+                            </e-accumulation-series>
+                        </e-accumulation-series-collection>
+                        <e-accumulationchart-legendsettings position="Top"
+                                                            toggleVisibility="false">
+                            <e-legendsettings-textstyle color='#fff' size="1rem"></e-legendsettings-textstyle>
+                        </e-accumulationchart-legendsettings>
+                        <e-accumulationchart-tooltipsettings enable></e-accumulationchart-tooltipsettings>
+                    </ejs-accumulationchart>
+                </div>
+            </div>
+         </div>
+        <div class=" col-md-8">
+            <div class="widget chart">
+                <div class="p-4">
+                    <h5 class="fw-bold">Income</h5>
+                </div>
+            <ejs-chart id="spline-chart" palettes=@(new string[]{"#a8e6cf"})>
+                    <e-chart-primaryxaxis valueType="Category">
+                        <e-majorgridlines width="0"></e-majorgridlines>
+                        <e-majorticklines width="0"></e-majorticklines>
+                    </e-chart-primaryxaxis>
+                    <e-chart-primaryyaxis>
+                        <e-majorgridlines width="1" color="#32414d" dashArray="3,5"></e-majorgridlines>
+                        <e-majorticklines width="0"></e-majorticklines>
+                    </e-chart-primaryyaxis>
+                    <e-chart-chartarea>
+                        <e-chartarea-border width="0"></e-chartarea-border>
+                    </e-chart-chartarea>
+                    <e-series-collection>
+                        @*we will show the series of income sorted by date*@
+                        <e-series dataSource="@ViewBag.SplineChartData" xName="Day" width="3"
+                                  yName="Income" name="Income" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline">
+
+                        </e-series>
+                    </e-series-collection>
+                    <e-chart-legendsettings position="Top" alignment="Far"
+                                            toggleVisibility="false">
+                        <e-legendsettings-textstyle color='#fff' size="1rem"></e-legendsettings-textstyle>
+                    </e-chart-legendsettings>
+                    <e-chart-tooltipsettings enable></e-chart-tooltipsettings>
+                </ejs-chart>
+            </div>
+        </div>
+    </div>
+
+  
+        <div class="container">
+            <div class="control-container">
+                <ejs-carousel id="monthsCarousel" dataSource="@ViewBag.CarouselData" selectedIndex="(@DateTime.Now.Month) - 1" itemTemplate='<div class="slide-content">${Title}</div>'>
+                </ejs-carousel>
+            </div>
+        </div>
+        <br />
+
+
+<div class="row mb-4">
+    <div class="col-md-4" >
+        <div class="d-flex flex-row  h-100">
+
+                    <div class="d-flex flex-column m-auto py-3" onload="pageonLoad()">
+                        <span class="lead" id="incomeTitle"></span>
+                            <h1 class="display-6 fw-bold" id="perMonth"></h1>
+                     </div>
+        </div>
+    </div>
+
+    <div class=" col-md-8">
+        <ejs-chart id="container" palettes=@(new string[]{"#a8e6cf"})>
+            <e-chart-primaryxaxis valueType="Category"></e-chart-primaryxaxis>
+            <e-chart-primaryyaxis title="Profit ($)"></e-chart-primaryyaxis>
+            <e-series-collection >
+                    <e-series name="Product X" xName="StudentName" yName="Income" 
+                          type="@Syncfusion.EJ2.Charts.ChartSeriesType.Column"
+                         ></e-series>
+            </e-series-collection>
+        </ejs-chart>
+      </div>
+    </div>
+
+
+
+
+<script>
+
+    var id = (@DateTime.Now.Month) - 1;
+    var sourcearray = JSON.parse('@Html.Raw(Json.Serialize(@ViewBag.CarouselData))');
+
+    window.onload=function(){
+        loadMonthIncome(id);
+        loadChart(id);
+    }
+    document.getElementById('monthsCarousel').onclick = function () {
+        var carouselObj = document.querySelector(".e-carousel").ej2_instances[0];
+        id = carouselObj.selectedIndex;
+        var element = carouselObj.Income;
+        loadMonthIncome(id);
+        var chart = document.getElementById("container").ej2_instances[0];
+        chart.series = [];
+        chart.refresh();
+        loadChart(id);  
+    }
+
+
+    function loadMonthIncome(id) {
+        var income = sourcearray[id].income;
+        var title = sourcearray[id].title;
+        $('#perMonth').text("$" + income);
+        $('#incomeTitle').text(title + " Income");
+    }
+
+    function loadChart(id){
+        var chart = document.getElementById("container").ej2_instances[0];
+        var sourcearray2 = sourcearray[id].doughnutChartData;
+
+        chart.addSeries([{
+            type: 'Column',
+            dataSource: sourcearray2,
+            xName: 'studentName', width: 2,
+            yName: 'income'
+        }]);
+    }
+
+   </script>
+
+ 

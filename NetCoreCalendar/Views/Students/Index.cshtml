@@ -53,28 +53,5 @@
 </table>
 
 <form id="deleteForm" asp-action="Delete">
-   <input type="hidden" id = "studentId" name="Id" />
+   <input type="hidden" id = "recordId" name="Id" />
 </form>
-
-@section Scripts{
-    <script>
-        $(function(){
-           $('.table').DataTable();
-           $('.deleteBtn').click(function(e) {
-               swal({
-                   text: "Are you sure you want to delete this record?",
-                   icon: "warning",
-                   buttons: true,
-                   dangerMode: true
-               }).then((confirm) => {
-                   if(confirm){
-                       var btn = $(this);
-                       var id = btn.data("id");
-                       $('#studentId').val(id);
-                       $('#deleteForm').submit();
-                   }
-               });
-           });
-       });
-    </script>
-}

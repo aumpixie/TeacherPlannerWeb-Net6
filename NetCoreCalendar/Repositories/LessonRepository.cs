@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NetCoreCalendar.Contracts;
 using NetCoreCalendar.Data;
 using NetCoreCalendar.Models;
+using System.Web.Mvc;
 
 namespace NetCoreCalendar.Repositories
 {
@@ -41,6 +42,24 @@ namespace NetCoreCalendar.Repositories
             lesson.RequestingUserId = user.Id;
             lesson.Rate = student.Rate;
             await AddAsync(lesson);
+        }
+
+        public async Task<bool> ExistsDate(LessonCreateVM model)
+        {
+            var user = await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User);
+            DateTime newDateTimeStart = new DateTime(model.StartDate.Year, model.StartDate.Month, model.StartDate.Day,
+                                   model.StartTime.Hour, model.StartTime.Minute, model.StartTime.Second);
+            var lessonOriginal = mapper.Map<Lesson>(model);
+            var lesson = await context.Lessons
+              .Where(q => q.RequestingUserId == user.Id)
+              .Include(l => l.Student)
+              .FirstOrDefaultAsync(m => m.Start == newDateTimeStart);
+
+            if(lesson != null)
+            {
+                return true;
+            }
+            return false;
         }
 
 

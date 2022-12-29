@@ -17,3 +17,47 @@ body {
   margin-bottom: 60px;
 }
 
+/*Widget*/
+.widget {
+    border-radius: 1rem;
+    background-color: #eb6864;
+    color: #fff;
+}
+
+    .widget.summary > div:first-child {
+        background-color: #222b33;
+        padding: 1rem;
+        border-top-left-radius: 1rem;
+        border-bottom-left-radius: 1rem;
+    }
+
+        .widget.summary > div:first-child i {
+            font-weight: bold;
+        }
+
+    .widget.income > div:first-child {
+        color: #65da41;
+    }
+
+    .widget.chart {
+        padding: 5px;
+        margin-left: 10px;
+        margin-top: 5px;
+    }
+
+.control-container {
+    background-color: #eb6864;
+    height: 90px;
+    margin: 0 auto;
+    width: 400px;
+    border-radius: 1rem;
+}
+
+.e-carousel .slide-content {
+    align-items: center;
+    display: flex;
+    font-size: 1.25rem;
+    height: 100%;
+    justify-content: center;
+    color: #fff;
+}

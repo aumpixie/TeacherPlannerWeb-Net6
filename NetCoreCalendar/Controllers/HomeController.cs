@@ -59,8 +59,15 @@ namespace NetCoreCalendar.Controllers
         {
             if (ModelState.IsValid)
             {
-                await lessonRepository.CreateLesson(model);
-                return PartialView("_CreateLesson", model);
+                if(await lessonRepository.ExistsDate(model) == false)
+                {
+                    await lessonRepository.CreateLesson(model);
+                    return PartialView("_CreateLesson", model);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "You have already had a lesson this day at this time");
+                }
             }
             var students = await studentRepository.GetAllStudentsAsync();
             model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
@@ -79,6 +86,7 @@ namespace NetCoreCalendar.Controllers
             return PartialView("_CreateLesson", model);
         }
 
+        // GET
         public async Task<PartialViewResult> Edit(int? id)
         {
             var model = await lessonRepository.GetLessonToUpdateAsync(id);
@@ -100,23 +108,29 @@ namespace NetCoreCalendar.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                if (await lessonRepository.ExistsDate(model) == false)
                 {
-                    await lessonRepository.UpdateLessonAsync(model);
-                    return PartialView("_Edit", model);
+                    try
+                    {
+                        await lessonRepository.UpdateLessonAsync(model);
+                        return PartialView("_Edit", model);
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!LessonExists(model.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!LessonExists(model.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    ModelState.AddModelError(string.Empty, "You have already had a lesson this day at this time");
                 }
-                return PartialView("_Edit", model);
             }
             var students = await studentRepository.GetAllStudentsAsync();
             model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
@@ -124,6 +138,7 @@ namespace NetCoreCalendar.Controllers
             return PartialView("_Edit", model);
         }
 
+        // POST
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -135,7 +150,6 @@ namespace NetCoreCalendar.Controllers
             await lessonRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
 
         private bool LessonExists(int id)
         {

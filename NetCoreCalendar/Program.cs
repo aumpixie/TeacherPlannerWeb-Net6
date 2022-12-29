@@ -24,6 +24,7 @@ builder.Services.AddDefaultIdentity<Teacher>(options => options.SignIn.RequireCo
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IStudentRepository,StudentRepository>();
 builder.Services.AddScoped<ILessonRepository,LessonRepository>();
+builder.Services.AddScoped<IIncomeRepository, IncomeRepository>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig));

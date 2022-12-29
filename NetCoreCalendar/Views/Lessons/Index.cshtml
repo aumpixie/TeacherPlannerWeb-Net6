@@ -72,46 +72,9 @@
 
                    
 <form id="deleteForm" asp-action="Delete">
-   <input type="hidden" id = "lessonId" name="Id" />
+   <input type="hidden" id = "recordId" name="Id" />
 </form>
 
 <form id="paidForm" asp-action="MarkPaid">
     <input type="hidden" id="lessonPaidId" name="Id" />
 </form>
-
-@section Scripts{
-    <script>
-        $(function(){
-           $('.deleteBtn').click(function(e) {
-               swal({
-                   text: "Are you sure you want to delete this record?",
-                   icon: "warning",
-                   buttons: true,
-                   dangerMode: true
-               }).then((confirm) => {
-                   if(confirm){
-                       var btn = $(this);
-                       var id = btn.data("id");
-                       $('#lessonId').val(id);
-                       $('#deleteForm').submit();
-                   }
-               });
-           });
-            $('.paidBtn').click(function (e) {
-                swal({
-                    text: "Are you sure you want to change this record?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true
-                }).then((confirm) => {
-                    if (confirm) {
-                        var btn = $(this);
-                        var id = btn.data("id");
-                        $('#lessonPaidId').val(id);
-                        $('#paidForm').submit();
-                    }
-                });
-            });
-       });
-    </script>
-    }
