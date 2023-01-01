@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using NetCoreCalendar.Configuration.Entities;
-using NetCoreCalendar.Models;
+using NetCoreCalendar.Data.Configuration.Entities;
 
 namespace NetCoreCalendar.Data
 {

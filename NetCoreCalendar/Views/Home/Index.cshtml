@@ -18,17 +18,15 @@
 } else{
      <div class="text-center">
         <h4>Click any date in the calendar to add your Lesson!</h4>
-        </div>
+     </div>
 }
-    
                          
 <div id='calendar'></div>
-
-     <!-- Add Modal -->
 
 <button type="button" id="lessonNew" hidden="hidden" class="btn btn-primary" onclick="fncShow();"> </button>
 <button type="button" class="btn btn-primary" hidden="hidden" id="lessonEdit" onclick="fncEdit();"></button>
 
+<!-- Add "Create Modal" -->
 
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -41,14 +39,16 @@
                 <div class="modal-body" id="divToPopulate">
 					@*Populate content here.*@
 				</div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back to Calendar</button>
-                <input type="submit" value="Create" id="formSubmission" class="btn btn-primary" />
-            </div>
-           </form>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back to Calendar</button>
+                    <input type="submit" value="Create" id="formSubmission" class="btn btn-primary" />
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+<!-- Add "Edit Modal" -->
 
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -80,15 +80,14 @@
 
 @section Scripts{
     <script>
-        
-      document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var date = new Date();
+            var dateStr = null;
 
-        var calendarEl = document.getElementById('calendar');
-        var date = new Date();
-        var dateStr = null;
-
-       var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth',
+            //instantiates the calendar
+           var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
                 events: @Html.Raw(ViewData["Events"]),
                 resources: @Html.Raw(ViewData["Resources"]),
                 eventTimeFormat: { // like '14:30'
@@ -96,32 +95,34 @@
                     minute: '2-digit',
                     meridiem: false
                 },
-                dateClick: function (info) {
+                dateClick: function (info) { // on date click saves the date and calls the popup modal
                     dateStr = info.dateStr;
                     localStorage.setItem('date', dateStr);
                     document.getElementById("lessonNew").click();
                 },
-                eventClick: function (info) {                   
+                eventClick: function (info) { // on event click gets the id of the event and calls the edit popup modal                 
                     sessionStorage.setItem('eventId', info.event.id);
                     document.getElementById("lessonEdit").click();
-                    }
+                }
+           });
+           calendar.render();
         });
-          
-        calendar.render();
-      });
 
+        // checks if the modal should open
         var checkAction = sessionStorage.getItem('action');
         if (checkAction == "backToModal") {
             document.getElementById("lessonNew").click();
             sessionStorage.setItem('action', null);
         }
 
+        //opens the modal to create a lesson and add it to the calendar
+        // GET
         function fncShow() {
             $.ajax({
                 url: '@Url.Action("ShowDialog", "Home")',
                 type: "GET",
                 success: function (data) {  
-                    $('#divToPopulate').html(data);
+                    $('#divToPopulate').html(data); // populates the modal with the model we get from the method in controller
                     $('#exampleModal').modal('show');
                 },
                 error: function (a1) {
@@ -135,6 +136,9 @@
                 }
             });
 
+            // submits the information in the modal, the method in the controller validates the data,
+            // if validation fails, return the modal with validation error messages, if validation succeeds, the modal closes
+            // POST
             $('#formSubmission').click(function (event) {
                 event.preventDefault();
 
@@ -145,16 +149,19 @@
                     // replace modal contents with new form
                     var newBody = $('#divToPopulate').html(data);
                     $('#exampleModal').find('#divToPopulate').replaceWith(newBody);
-                    var isValid = newBody.find('[name="IsValid"]').val();
 
-                    if (isValid != 'False') {
+                    var isValid = newBody.find('[name="IsValid"]').val();
+                    if (isValid != 'False') { // closes the modal if the lesson was successfully created
                         $('#exampleModal').modal('hide');
                         window.location.reload();
-                    } 
-                });    
+                    }
+                });
+
             });
         }
 
+        // GET
+        // opens the modal to edit the existing lesson in the calendar
         function fncEdit() {
             var eventId = sessionStorage.getItem('eventId');
 
@@ -170,7 +177,9 @@
                 }
             });
 
-
+            // submits the updated information in the modal, the method in the controller validates the data,
+            // if validation fails, return the modal with validation error messages, if validation succeeds, the modal closes
+            // POST
             $('#formEditSubmission').click(function (event) {
                 event.preventDefault();
 
@@ -181,8 +190,8 @@
                     // replace modal contents with new form
                     var newBody = $('#divToPopulateEdit').html(data);
                     $('#editModal').find('#divToPopulateEdit').replaceWith(newBody);
-                    var isValid = newBody.find('[name="IsValid"]').val();
 
+                    var isValid = newBody.find('[name="IsValid"]').val();
                     if (isValid != 'False') {
                         $('#editModal').modal('hide');
                         window.location.reload();

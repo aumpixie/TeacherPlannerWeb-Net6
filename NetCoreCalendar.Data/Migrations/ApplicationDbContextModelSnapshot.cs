@@ -52,7 +52,7 @@ namespace NetCoreCalendar.Data.Migrations
                         new
                         {
                             Id = "e71edcef-91ae-468c-98a2-a3d88d3fd01b",
-                            ConcurrencyStamp = "f2fe046d-482f-47d0-acf0-ef83db4ab6f6",
+                            ConcurrencyStamp = "18aca7f9-5006-4d87-aff0-a4b977a600fb",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -213,7 +213,6 @@ namespace NetCoreCalendar.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Goal")
@@ -226,7 +225,6 @@ namespace NetCoreCalendar.Data.Migrations
                         .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("RequestingUserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

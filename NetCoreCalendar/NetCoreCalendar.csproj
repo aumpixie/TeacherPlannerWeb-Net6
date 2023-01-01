@@ -26,4 +26,8 @@
     <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="20.3.0.61" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\NetCoreCalendar.ApplicationLogic\NetCoreCalendar.ApplicationLogic.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCoreCalendar", "NetCoreCalendar\NetCoreCalendar.csproj", "{C10C1804-E0CA-4894-949D-CA4E2081C17E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreCalendar", "NetCoreCalendar\NetCoreCalendar.csproj", "{C10C1804-E0CA-4894-949D-CA4E2081C17E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCoreCalendar.Data", "NetCoreCalendar.Data\NetCoreCalendar.Data.csproj", "{92BC41DF-4F08-4BEE-9F70-238F335F4535}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCoreCalendar.Common", "NetCoreCalendar.Common\NetCoreCalendar.Common.csproj", "{5BFDC3AB-DD3C-423D-951B-7C404CFA3B0A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetCoreCalendar.ApplicationLogic", "NetCoreCalendar.ApplicationLogic\NetCoreCalendar.ApplicationLogic.csproj", "{DE55447D-4294-49D5-9C03-0EC02339CC4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{C10C1804-E0CA-4894-949D-CA4E2081C17E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C10C1804-E0CA-4894-949D-CA4E2081C17E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C10C1804-E0CA-4894-949D-CA4E2081C17E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92BC41DF-4F08-4BEE-9F70-238F335F4535}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92BC41DF-4F08-4BEE-9F70-238F335F4535}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92BC41DF-4F08-4BEE-9F70-238F335F4535}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92BC41DF-4F08-4BEE-9F70-238F335F4535}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BFDC3AB-DD3C-423D-951B-7C404CFA3B0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BFDC3AB-DD3C-423D-951B-7C404CFA3B0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BFDC3AB-DD3C-423D-951B-7C404CFA3B0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BFDC3AB-DD3C-423D-951B-7C404CFA3B0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE55447D-4294-49D5-9C03-0EC02339CC4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE55447D-4294-49D5-9C03-0EC02339CC4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE55447D-4294-49D5-9C03-0EC02339CC4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE55447D-4294-49D5-9C03-0EC02339CC4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

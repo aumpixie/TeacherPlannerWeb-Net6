@@ -1,7 +1,7 @@
 ﻿using NetCoreCalendar.Data;
 using NetCoreCalendar.Models;
 
-namespace NetCoreCalendar.Contracts
+namespace NetCoreCalendar.ApplicationLogic.Contracts
 {
     public interface ILessonRepository : IGenericRepository<Lesson>
     {

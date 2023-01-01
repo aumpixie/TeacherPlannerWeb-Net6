@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NetCoreCalendar.Constants;
-using NetCoreCalendar.Contracts;
+using NetCoreCalendar.ApplicationLogic.Contracts;
 using NetCoreCalendar.Data;
 using System.Globalization;
 

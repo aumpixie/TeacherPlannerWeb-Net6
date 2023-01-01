@@ -12,8 +12,8 @@ using NetCoreCalendar.Data;
 namespace NetCoreCalendar.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220928015552_UpdatedTeacherProperties")]
-    partial class UpdatedTeacherProperties
+    [Migration("20230101072734_SeparationOfConcernsFixed")]
+    partial class SeparationOfConcernsFixed
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,6 +49,15 @@ namespace NetCoreCalendar.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "e71edcef-91ae-468c-98a2-a3d88d3fd01b",
+                            ConcurrencyStamp = "18aca7f9-5006-4d87-aff0-a4b977a600fb",
+                            Name = "User",
+                            NormalizedName = "USER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -172,20 +181,19 @@ namespace NetCoreCalendar.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("EndTime")
+                    b.Property<DateTime>("End")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsPaid")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<decimal>("Rate")
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<DateTime>("StartTime")
+                    b.Property<string>("RequestingUserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Start")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("StudentId")
@@ -207,7 +215,6 @@ namespace NetCoreCalendar.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Goal")
@@ -218,6 +225,9 @@ namespace NetCoreCalendar.Data.Migrations
 
                     b.Property<decimal>("Rate")
                         .HasColumnType("decimal(5,2)");
+
+                    b.Property<string>("RequestingUserId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

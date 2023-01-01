@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using NetCoreCalendar.Contracts;
+using NetCoreCalendar.ApplicationLogic.Contracts;
 using NetCoreCalendar.Data;
 using NetCoreCalendar.Models;
 

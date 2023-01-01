@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using NetCoreCalendar.Constants;
 using System.Data;
 
-namespace NetCoreCalendar.Configuration.Entities
+namespace NetCoreCalendar.Data.Configuration.Entities
 {
     internal class RoleSeedConfiguration : IEntityTypeConfiguration<IdentityRole>
     {

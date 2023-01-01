@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NetCoreCalendar.Contracts;
+using NetCoreCalendar.ApplicationLogic.Contracts;
 using NetCoreCalendar.Data;
 
 namespace NetCoreCalendar.Controllers

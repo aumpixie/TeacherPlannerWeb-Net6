@@ -1,6 +1,6 @@
 ﻿using NetCoreCalendar.Data;
 
-namespace NetCoreCalendar.Contracts
+namespace NetCoreCalendar.ApplicationLogic.Contracts
 {
     public interface IIncomeRepository : IGenericRepository<Lesson>
     {

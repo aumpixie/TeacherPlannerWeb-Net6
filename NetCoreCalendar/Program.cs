@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using NetCoreCalendar.Data;
 using AutoMapper;
 using NetCoreCalendar.Configuration;
-using NetCoreCalendar.Contracts;
+using NetCoreCalendar.ApplicationLogic.Contracts;
 using NetCoreCalendar.Repositories;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using NetCoreCalendar.Models;

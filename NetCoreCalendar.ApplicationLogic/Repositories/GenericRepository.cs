@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NetCoreCalendar.Contracts;
+using NetCoreCalendar.ApplicationLogic.Contracts;
 using NetCoreCalendar.Data;
 
 namespace NetCoreCalendar.Repositories

@@ -1,4 +1,4 @@
-﻿namespace NetCoreCalendar.Contracts
+﻿namespace NetCoreCalendar.ApplicationLogic.Contracts
 {
     public interface IGenericRepository<T> where T : class
     {
