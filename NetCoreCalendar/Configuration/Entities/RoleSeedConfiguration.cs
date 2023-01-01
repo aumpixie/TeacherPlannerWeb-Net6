@@ -8,6 +8,7 @@ namespace NetCoreCalendar.Configuration.Entities
 {
     internal class RoleSeedConfiguration : IEntityTypeConfiguration<IdentityRole>
     {
+      
         public void Configure(EntityTypeBuilder<IdentityRole> builder)
         {
             builder.HasData(

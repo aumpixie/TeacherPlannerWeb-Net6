@@ -126,6 +126,12 @@
                 },
                 error: function (a1) {
                     console.log(a1);
+                    swal({
+                        text: "Please, log in to add a new lesson!",
+                        icon: "warning",
+                        buttons: false,
+                        dangerMode: true
+                    });
                 }
             });
 

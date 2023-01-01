@@ -137,6 +137,38 @@
     </div>
 
 
+<div class="widget chart">
+    <div class="p-4">
+        <h5 class="fw-bold">Income This Year</h5>
+    </div>
+<ejs-chart id="spline-chart-year" palettes=@(new string[]{"#a8e6cf"})>
+    <e-chart-primaryxaxis valueType="Category">
+        <e-majorgridlines width="0"></e-majorgridlines>
+        <e-majorticklines width="0"></e-majorticklines>
+    </e-chart-primaryxaxis>
+    <e-chart-primaryyaxis>
+        <e-majorgridlines width="1" color="#32414d" dashArray="3,5"></e-majorgridlines>
+        <e-majorticklines width="0"></e-majorticklines>
+    </e-chart-primaryyaxis>
+    <e-chart-chartarea>
+        <e-chartarea-border width="0"></e-chartarea-border>
+    </e-chart-chartarea>
+    <e-series-collection>
+        @*we will show the series of income sorted by date*@
+        <e-series dataSource="@ViewBag.SplineChartDataYear" xName="Day" width="3"
+                  yName="Income" name="Income" type="@Syncfusion.EJ2.Charts.ChartSeriesType.Spline">
+
+        </e-series>
+    </e-series-collection>
+    <e-chart-legendsettings position="Top" alignment="Far"
+                            toggleVisibility="false">
+        <e-legendsettings-textstyle color='#fff' size="1rem"></e-legendsettings-textstyle>
+    </e-chart-legendsettings>
+    <e-chart-tooltipsettings enable></e-chart-tooltipsettings>
+</ejs-chart>
+</div>
+
+
 
 
 <script>

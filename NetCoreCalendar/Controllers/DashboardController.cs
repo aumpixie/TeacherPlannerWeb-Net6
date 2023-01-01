@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NetCoreCalendar.Contracts;
 using NetCoreCalendar.Data;
 
 namespace NetCoreCalendar.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -27,22 +29,11 @@ namespace NetCoreCalendar.Controllers
             ViewBag.DoughnutChartData = doughnutData;
 
             var splineData = await incomeRepository.CreateSplineChartForWeek();
-            DateTime StartDate = DateTime.Today.AddDays(-6);
 
-            string[] Last7Days = Enumerable.Range(0, 7)
-                // here we iterate 7 times and add a number of days from the range to the starting date
-                .Select(i => StartDate.AddDays(i).ToString("dd-MMM"))
-                .ToArray();
+            ViewBag.SplineChartData = splineData;
 
-            ViewBag.SplineChartData = from day in Last7Days
-                                      join Income in splineData on day equals Income.Day
-                                      into dayIncomeJoined
-                                      from income in dayIncomeJoined.DefaultIfEmpty()
-                                      select new
-                                      {
-                                          Day = day,
-                                          Income = income == null ? 0 : income.Income,
-                                      };
+            var splineDataYear = await incomeRepository.CreateSplineChartForYear();
+            ViewBag.SplineChartDataYear = splineDataYear;
 
             var carouselSource = await incomeRepository.FillCarouselList();
             ViewBag.CarouselData = carouselSource;
@@ -50,16 +41,5 @@ namespace NetCoreCalendar.Controllers
             return View();
         }
 
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GetMonthlyChart(int id)
-        {
-            var incomeSpecificMonth = await incomeRepository.GetIncomeForSpecifiedMonth(id);
-            
-            TempData["Income"] = incomeSpecificMonth.ToString("C0");
-            return RedirectToAction(nameof(Index));
-
-        }
     }
 }

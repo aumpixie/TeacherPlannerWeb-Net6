@@ -11,10 +11,16 @@ namespace NetCoreCalendar.Contracts
         Task<int> GetIncomeForYear();
         Task<List<DoughnutChart>> CreateDoughnutChartForWeek();
 
-        Task<List<SplineChart>> CreateSplineChartForWeek();
+        Task<List<SplineChart>> CreateSplineChart(List<Lesson> lessons);
+        Task<IEnumerable<SplineChart>> CreateSplineChartForEachDay(string[] days, List<SplineChart> result);
+        Task<IEnumerable<SplineChart>> CreateSplineChartForWeek();
+        Task<IEnumerable<SplineChart>> CreateSplineChartForYear();
+        Task<List<DoughnutChart>> CreateLineChartForMonth(int id);
+        
+        Task<int> GetIncomeForSpecifiedMonth(int id);
 
         Task<List<CarouselDataBinding>> FillCarouselList();
-        Task<int> GetIncomeForSpecifiedMonth(int id);
-        Task<List<DoughnutChart>> CreateDoughnutChartForMonth(int id);
+        
+        
     }
 }

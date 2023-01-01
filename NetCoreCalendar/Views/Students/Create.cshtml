@@ -33,11 +33,25 @@
             </div>
             <br/>
             <div class="form-group">
-                 <a asp-action="Index" class="btn btn-dark">Back to Students</a> &nbsp;
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <button class="btn btn-dark backBtn">Back</button> &nbsp;
+                <input type="submit" value="Create" class="btn btn-primary" />  
             </div>
         </form>
+
+         
     </div>
 </div>
+
+
+@section Scripts{
+        <script>
+            $(function () {
+                $('.backBtn').click(function (event) {
+                    event.preventDefault();
+                    history.back();
+                });
+            });
+        </script>
+}
 
 

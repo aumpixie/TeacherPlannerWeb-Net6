@@ -30,21 +30,22 @@ namespace NetCoreCalendar.Controllers
 
         public async Task<IActionResult> Index()
         {
-            try
+            if (User.IsInRole("User"))
             {
                 var studentsVM = await studentRepository.GetAllStudentsVMAsync();
                 var lessonsVM = await lessonRepository.GetAllLessonsForCalendarAsync();
-                if (studentsVM != null && lessonsVM != null)
-                {
-                    ViewData["Resources"] = JSONListHelper.GetResourceListJSONString(studentsVM);
-                    ViewData["Events"] = JSONListHelper.GetEventListJSONString(lessonsVM);
-                }
-            }
-            catch (Exception ex)
-            {
-                ModelState.AddModelError(string.Empty, "Please, log in to use the calendar");
-            }
 
+                ViewData["Resources"] = JSONListHelper.GetResourceListJSONString(studentsVM);
+                ViewData["Events"] = JSONListHelper.GetEventListJSONString(lessonsVM);
+            }
+            else
+            {
+                List<LessonVM> lessons = new List<LessonVM>();
+                List<StudentVM> students = new List<StudentVM>();
+                ViewData["Resources"] = JSONListHelper.GetResourceListJSONString(students);
+                ViewData["Events"] = JSONListHelper.GetEventListJSONString(lessons);
+            }
+           
             return View();
         }
 
@@ -75,6 +76,7 @@ namespace NetCoreCalendar.Controllers
             return PartialView("_CreateLesson", model);
         }
 
+        [Authorize]
         public async Task<PartialViewResult> ShowDialog()
         {
             var students = await studentRepository.GetAllStudentsAsync();
