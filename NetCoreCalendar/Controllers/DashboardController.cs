@@ -16,6 +16,11 @@ namespace NetCoreCalendar.Controllers
             this.incomeRepository = incomeRepository;
         }
 
+        // GET: Dashboard
+        /**
+         * Fills the ViewBags with the corresponding data, 
+         * which we will pass to the charts for the visual representation
+         **/
         public async Task<IActionResult> Index()
         {
             var incomeWeek = await incomeRepository.GetIncomeForWeek();
@@ -40,6 +45,5 @@ namespace NetCoreCalendar.Controllers
 
             return View();
         }
-
     }
 }

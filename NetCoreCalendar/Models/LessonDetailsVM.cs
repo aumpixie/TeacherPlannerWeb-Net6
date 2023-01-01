@@ -13,7 +13,6 @@ namespace NetCoreCalendar.Models
         [DataType(DataType.Time)]
         public DateTime StartTime { get; set; }
 
-
         [Display(Name = "End Time")]
         [DisplayFormat(DataFormatString = "{0:t}")]
         [DataType(DataType.Time)]
@@ -23,9 +22,7 @@ namespace NetCoreCalendar.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
-
         public DateTime Start { get; set; }
-
         public DateTime End { get; set; }
         public StudentVM? Student { get; set; }
         public string? Description { get; set; }
@@ -38,7 +35,7 @@ namespace NetCoreCalendar.Models
         {
             get
             {
-                return Student.FirstName + " " + Student.LastName;
+                return Student?.FirstName + " " + Student?.LastName;
             }
         }
     }

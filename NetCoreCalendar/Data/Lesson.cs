@@ -4,7 +4,6 @@ namespace NetCoreCalendar.Data
 {
     public class Lesson : BaseEntity
     {
-
         [ForeignKey("StudentId")]
         // it represents that we are connected to the Student table
         public Student? Student { get; set; }

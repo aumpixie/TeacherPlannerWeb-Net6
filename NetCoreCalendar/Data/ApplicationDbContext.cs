@@ -20,6 +20,5 @@ namespace NetCoreCalendar.Data
 
         public DbSet<Student> Students { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
-        public DbSet<NetCoreCalendar.Models.StudentCreateVM> StudentCreateVM { get; set; }
     }
 }

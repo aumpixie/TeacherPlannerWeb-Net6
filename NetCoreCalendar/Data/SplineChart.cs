@@ -2,8 +2,7 @@
 {
     public class SplineChart
     {
-        public string Day;
-        public int Income;
-
+        public string? Day { get; set; }
+        public int Income { get; set; } 
     }
 }

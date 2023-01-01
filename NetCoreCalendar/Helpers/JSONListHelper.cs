@@ -5,6 +5,10 @@ namespace NetCoreCalendar.Helpers
 {
     public static class JSONListHelper
     {
+        /**
+         * Helps to serialize the list of lessons into the format that we can use in the calendar
+         * to show the planned lessons there
+         **/
         public static string GetEventListJSONString(List<LessonVM> lessons)
         {
             var eventList = new List<Event>();
@@ -23,6 +27,10 @@ namespace NetCoreCalendar.Helpers
             return System.Text.Json.JsonSerializer.Serialize(eventList);
         }
 
+        /**
+         * Helps to serialize the list of students into the format that we can use in the calendar
+         * to show the students that are connected to the corresponding lessons there
+         **/
         public static string GetResourceListJSONString(List<StudentVM> students)
         {
             var resourceList = new List<Resource>();
@@ -36,25 +44,25 @@ namespace NetCoreCalendar.Helpers
                 resourceList.Add(resource);
             }
             return System.Text.Json.JsonSerializer.Serialize(resourceList);
-
         }
-
     }
 
-
+    /** Two nested Data Classes that we use only for JSONListHelper;
+     * All Properies begin from the lower case, as required by the calendar documentation
+     **/
     public class Event
     {
         public int id { get; set; }
         public DateTime start { get; set; }
         public DateTime end { get; set; }
         public int resourceId { get; set; }
-        public string title { get; set; }
+        public string? title { get; set; }
 
     }
 
     public class Resource
     {
         public int id { get; set; }
-        public string title { get; set; }
+        public string? title { get; set; }
     }
 }

@@ -1,12 +1,15 @@
 ﻿using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using MimeKit;
-using Org.BouncyCastle.Crypto.Macs;
 
 namespace NetCoreCalendar.Models
 {
     public class EmailSender : IEmailSender
     {
+        /**
+         * Creates a confirmation email that we will send to our users for them to
+         * proceed with the registration process; uses a third party email to send the message
+         **/
         public Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             var emailToSend = new MimeMessage();

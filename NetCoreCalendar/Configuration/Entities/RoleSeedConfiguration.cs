@@ -8,7 +8,6 @@ namespace NetCoreCalendar.Configuration.Entities
 {
     internal class RoleSeedConfiguration : IEntityTypeConfiguration<IdentityRole>
     {
-      
         public void Configure(EntityTypeBuilder<IdentityRole> builder)
         {
             builder.HasData(
@@ -17,8 +16,7 @@ namespace NetCoreCalendar.Configuration.Entities
                      Id = "e71edcef-91ae-468c-98a2-a3d88d3fd01b",
                      Name = Roles.User,
                      NormalizedName = Roles.User.ToUpper()
-                 }
-                );
+                 });
         }
     }
 }

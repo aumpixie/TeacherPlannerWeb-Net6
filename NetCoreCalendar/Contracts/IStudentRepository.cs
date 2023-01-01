@@ -8,15 +8,10 @@ namespace NetCoreCalendar.Contracts
         Task<List<StudentVM>> GetAllStudentsVMAsync();
         Task<List<Student>> GetAllStudentsAsync();
         Task CreateStudent(StudentCreateVM model);
-
         Task UpdateStudentAsync(StudentCreateVM model);
-
         Task<Teacher> GetUserRecords();
-
         Task<Student> UpdateModel(StudentCreateVM model);
-
         Task<StudentVM?> GetStudentAsync(int? id);
-
         Task<StudentCreateVM?> GetStudentToUpdateAsync(int? id);
     }
 }

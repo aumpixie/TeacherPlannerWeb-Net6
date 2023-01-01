@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NetCoreCalendar.Contracts;
 using NetCoreCalendar.Data;
@@ -68,6 +63,11 @@ namespace NetCoreCalendar.Controllers
             return View(model);
         }
 
+        // GET: Students/CreateForLesson
+        /**
+         * Returns the View of the specific View page that we can access only if we are creating
+         * a Student object from the Lesson Create Page
+         **/
         public IActionResult CreateForLesson()
         {
             return View();
@@ -132,7 +132,6 @@ namespace NetCoreCalendar.Controllers
             }
             return View(model);
         }
-
 
         // POST: Students/Delete/5
         [HttpPost, ActionName("Delete")]

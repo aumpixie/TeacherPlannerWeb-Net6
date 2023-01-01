@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using NetCoreCalendar.Contracts;
 using NetCoreCalendar.Data;
 using NetCoreCalendar.Models;
-using System.Web.Mvc;
 
 namespace NetCoreCalendar.Repositories
 {
@@ -27,29 +26,49 @@ namespace NetCoreCalendar.Repositories
             this.studentRepository = studentRepository;
         }
 
+        /**
+         * Adds the lesson object to the database
+         **/
         public async Task CreateLesson(LessonCreateVM model)
         {
-            var user = await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User);
+            // we find the user that is currently using the app
+            var user = await studentRepository.GetUserRecords();
 
+            // combine all the DateTime properties of the model into two DateTime variables
             DateTime newDateTimeStart = new DateTime(model.StartDate.Year, model.StartDate.Month, model.StartDate.Day,
                                     model.StartTime.Hour, model.StartTime.Minute, model.StartTime.Second);
             DateTime newDateTimeEnd = new DateTime(model.StartDate.Year, model.StartDate.Month, model.StartDate.Day,
                                     model.EndTime.Hour, model.EndTime.Minute, model.EndTime.Second);
+
             var lesson = mapper.Map<Lesson>(model);
+            // find the student for whom the lesson is created
             var student = await studentRepository.GetStudentAsync(lesson.StudentId);
-            lesson.Start = newDateTimeStart;
-            lesson.End = newDateTimeEnd;
-            lesson.RequestingUserId = user.Id;
-            lesson.Rate = student.Rate;
+            if(student != null)
+            {
+                // pass missing information to the variables that will be visible in the database table
+                lesson.Start = newDateTimeStart;
+                lesson.End = newDateTimeEnd;
+                lesson.RequestingUserId = user.Id;
+                lesson.Rate = student.Rate;
+            }
             await AddAsync(lesson);
         }
 
+        /**
+         * Checks if the lesson with the same date and time already exists in our database,
+         * returns false if there is no such lesson, and true otherwise
+         **/
         public async Task<bool> ExistsDate(LessonCreateVM model)
         {
-            var user = await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User);
+            // we find the user that is currently using the app
+            var user = await studentRepository.GetUserRecords();
+
+            // combine all the DateTime properties that the user mentioned in the model into one DateTime variable
             DateTime newDateTimeStart = new DateTime(model.StartDate.Year, model.StartDate.Month, model.StartDate.Day,
                                    model.StartTime.Hour, model.StartTime.Minute, model.StartTime.Second);
             var lessonOriginal = mapper.Map<Lesson>(model);
+
+            // looks for the lesson, with the abovementioned date, in the database
             var lesson = await context.Lessons
               .Where(q => q.RequestingUserId == user.Id)
               .Include(l => l.Student)
@@ -62,7 +81,9 @@ namespace NetCoreCalendar.Repositories
             return false;
         }
 
-
+        /**
+         * Finds all the lessons of the user in the database
+         **/
         public async Task<List<LessonDetailsVM>> GetAllLessonsAsync()
         {
             var user = await studentRepository.GetUserRecords();
@@ -71,15 +92,18 @@ namespace NetCoreCalendar.Repositories
                 .Include(l => l.Student)
                 .ToListAsync();
             var lessonsVM = mapper.Map<List<LessonDetailsVM>>(lessons);
+
             foreach(var lesson in lessonsVM)
             {
                 lesson.StartTime = lesson.Start;
                 lesson.EndTime = lesson.End;
             }
-        
             return lessonsVM;
         }
 
+        /**
+         * Finds all the lessons of the user in the database to serialize them for the calendar
+         **/
         public async Task<List<LessonVM>> GetAllLessonsForCalendarAsync()
         {
             var user = await studentRepository.GetUserRecords();
@@ -87,10 +111,14 @@ namespace NetCoreCalendar.Repositories
                 .Where(q => q.RequestingUserId == user.Id)
                 .Include(l => l.Student)
                 .ToListAsync();
+
             var lessonsVM = mapper.Map<List<LessonVM>>(lessons);
             return lessonsVM;
         }
 
+        /**
+         * Gets the lesson view models 
+         **/
         public async Task<LessonsViewVM> GetMyLessonsAsync()
         {
             var lessonsVM = await GetAllLessonsAsync(); ;
@@ -98,6 +126,9 @@ namespace NetCoreCalendar.Repositories
             return model;
         }
 
+        /**
+         * Finds a lesson with teh corresponding id in the database
+         **/
         public async Task<LessonDetailsVM?> GetLessonAsync(int? id)
         {
             var lesson = await context.Lessons
@@ -105,26 +136,40 @@ namespace NetCoreCalendar.Repositories
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             var lessonVM = mapper.Map<LessonDetailsVM>(lesson);
-            lessonVM.StartTime = lesson.Start;
-            lessonVM.StartDate = lesson.Start;
-            lessonVM.EndTime = lesson.End;
+            if(lesson != null)
+            {
+                lessonVM.StartTime = lesson.Start;
+                lessonVM.StartDate = lesson.Start;
+                lessonVM.EndTime = lesson.End;
+            }
             return lessonVM;
         }
 
+        /**
+         * Updates the information about the existing lesson in the database
+         **/
         public async Task<Lesson> UpdateModel(LessonCreateVM model)
         {
+            // find the user that is currently using the app
             var user = await studentRepository.GetUserRecords();
+
+            // combine all the DateTime properties of the model into two DateTime variables
             DateTime newDateTimeStart = new DateTime(model.StartDate.Year, model.StartDate.Month, model.StartDate.Day,
                                    model.StartTime.Hour, model.StartTime.Minute, model.StartTime.Second);
             DateTime newDateTimeEnd = new DateTime(model.StartDate.Year, model.StartDate.Month, model.StartDate.Day,
                                     model.EndTime.Hour, model.EndTime.Minute, model.EndTime.Second);
+
             var lesson = mapper.Map<Lesson>(model);
+            // pass missing information to the variables that will be visible in the database table
             lesson.Start = newDateTimeStart;
             lesson.End = newDateTimeEnd;
             lesson.RequestingUserId = user.Id;
             return lesson;
         }
 
+        /**
+         * Updates the isPaid Property of the object with the indicated id in the database
+         **/
         public async Task UpdatePaid( int? id)
         {
             var lesson = await GetAsync(id);
@@ -142,23 +187,32 @@ namespace NetCoreCalendar.Repositories
             await UpdateAsync(lesson);
         }
 
+        /**
+         * Updates the lesson record in the database
+         **/
         public async Task UpdateLessonAsync(LessonCreateVM model)
         {
             var lesson = await UpdateModel(model);
             await UpdateAsync(lesson);
         }
 
+        /**
+         * Finds the lesson with the indicated id to update
+         **/
         public async Task<LessonCreateVM?> GetLessonToUpdateAsync(int? id)
         {
             var lesson = await context.Lessons
              .Include(l => l.Student)
              .FirstOrDefaultAsync(m => m.Id == id);
+
             var model = mapper.Map<LessonCreateVM>(lesson);
-            model.StartTime = lesson.Start;
-            model.EndTime = lesson.End;
-            model.StartDate = lesson.Start;
+            if (lesson != null)
+            {
+                model.StartTime = lesson.Start;
+                model.EndTime = lesson.End;
+                model.StartDate = lesson.Start;
+            }
             return model;
         }
-
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,8 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using NetCoreCalendar.Contracts;
 using NetCoreCalendar.Data;
 using NetCoreCalendar.Models;
-using NetCoreCalendar.Repositories;
-using Org.BouncyCastle.Bcpg;
 
 namespace NetCoreCalendar.Controllers
 {
@@ -52,7 +46,6 @@ namespace NetCoreCalendar.Controllers
             return View(model);
         }
 
-
         // GET: Lessons/Create
         public async Task<IActionResult> Create()
         {
@@ -75,7 +68,8 @@ namespace NetCoreCalendar.Controllers
         {
            if (ModelState.IsValid)
            {
-                if(await lessonRepository.ExistsDate(model) == false)
+                // checks whether there is a lesson for the same day and time, false means that we can proceed
+                if (await lessonRepository.ExistsDate(model) == false)
                 {
                     await lessonRepository.CreateLesson(model);
                     return RedirectToAction(nameof(Index));
@@ -86,9 +80,8 @@ namespace NetCoreCalendar.Controllers
                 }
                     
            }
-            var students = await studentRepository.GetAllStudentsAsync();
-            model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
-            model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
+            // fills the selectLists in case the model returns invalid, so that we can see our choice again
+            await FillLists(model);
             return View(model);
         }
 
@@ -100,10 +93,8 @@ namespace NetCoreCalendar.Controllers
             {
                 return NotFound();
             }
-
-            var students = await studentRepository.GetAllStudentsAsync();
-            model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
-            model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
+            // fills the selectLists in case the model returns invalid, so that we can see our choice again
+            await FillLists(model);
             return View(model);
         }
 
@@ -145,9 +136,7 @@ namespace NetCoreCalendar.Controllers
                     ModelState.AddModelError(string.Empty, "You have already had a lesson this day at this time");
                 }
             }
-            var students = await studentRepository.GetAllStudentsAsync();
-            model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
-            model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
+            await FillLists(model);
             return View(model);
         }
 
@@ -165,6 +154,10 @@ namespace NetCoreCalendar.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        /**
+         * In case we need to change the isPaid property from the Index page,
+         * we update only this specific property with the help of this method
+         **/
         [HttpPost, ActionName("MarkPaid")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MarkPaid(int id)
@@ -176,6 +169,16 @@ namespace NetCoreCalendar.Controllers
         private bool LessonExists(int id)
         {
           return _context.Lessons.Any(e => e.Id == id);
+        }
+
+        /**
+         * Fills the selectLists in case the model returns invalid, so that we can see our choice again
+         **/
+        private async Task FillLists(LessonCreateVM model)
+        {
+            var students = await studentRepository.GetAllStudentsAsync();
+            model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
+            model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
         }
     }
 }

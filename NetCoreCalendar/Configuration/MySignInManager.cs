@@ -22,7 +22,6 @@ namespace NetCoreCalendar.Configuration
             {
                 return SignInResult.Failed;
             }
-
             return await PasswordSignInAsync(user, password, isPersistent, lockoutOnFailure);
         }
     } 

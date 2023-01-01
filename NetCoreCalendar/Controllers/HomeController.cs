@@ -2,12 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using NetCoreCalendar.Contracts;
 using NetCoreCalendar.Data;
 using NetCoreCalendar.Helpers;
 using NetCoreCalendar.Models;
-using NetCoreCalendar.Repositories;
 using System.Diagnostics;
 
 namespace NetCoreCalendar.Controllers
@@ -28,6 +26,10 @@ namespace NetCoreCalendar.Controllers
             this.context = context;
         }
 
+        /** Checks the user role to see if we can fill the calendar with events and resources;
+         * If the user is not logged in, creates empty lists of LessonVM and StudentVM for the calendar to load
+         * and passes them to the corresponding ViewBags
+         **/
         public async Task<IActionResult> Index()
         {
             if (User.IsInRole("User"))
@@ -44,22 +46,18 @@ namespace NetCoreCalendar.Controllers
                 List<StudentVM> students = new List<StudentVM>();
                 ViewData["Resources"] = JSONListHelper.GetResourceListJSONString(students);
                 ViewData["Events"] = JSONListHelper.GetEventListJSONString(lessons);
-            }
-           
+            } 
             return View();
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
+        // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LessonCreateVM model)
         {
             if (ModelState.IsValid)
             {
+                // checks whether there is a lesson for the same day and time, false means that we can proceed
                 if(await lessonRepository.ExistsDate(model) == false)
                 {
                     await lessonRepository.CreateLesson(model);
@@ -70,13 +68,16 @@ namespace NetCoreCalendar.Controllers
                     ModelState.AddModelError(string.Empty, "You have already had a lesson this day at this time");
                 }
             }
-            var students = await studentRepository.GetAllStudentsAsync();
-            model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
-            model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
+            // fills the selectLists in case the model returns invalid, so that we can see our choice again
+            await FillLists(model);
             return PartialView("_CreateLesson", model);
         }
 
+        // GET
         [Authorize]
+        /**  Fills the popUp modal with the students model,
+         *   We initiate two selectLists to choose the student we need. Only users can see the popup modal.
+         **/
         public async Task<PartialViewResult> ShowDialog()
         {
             var students = await studentRepository.GetAllStudentsAsync();
@@ -89,16 +90,24 @@ namespace NetCoreCalendar.Controllers
         }
 
         // GET
+        /**  Fills the popUp modal with the information of the Student with the corresponding id;
+         * We initiate two selectLists, in case we need to change the Student
+         **/
         public async Task<PartialViewResult> Edit(int? id)
         {
             var model = await lessonRepository.GetLessonToUpdateAsync(id);
             var students = await studentRepository.GetAllStudentsAsync();
-            model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
-            model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
+            if (model != null)
+            {
+                model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
+                model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
+            }
             return PartialView("_Edit", model);
         }
 
         // POST: Home/Edit/5
+        /** Updates the Lesson information
+         **/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, LessonCreateVM model)
@@ -110,6 +119,7 @@ namespace NetCoreCalendar.Controllers
 
             if (ModelState.IsValid)
             {
+                // checks whether there is a lesson for the same day and time, false means that we can proceed
                 if (await lessonRepository.ExistsDate(model) == false)
                 {
                     try
@@ -134,9 +144,8 @@ namespace NetCoreCalendar.Controllers
                     ModelState.AddModelError(string.Empty, "You have already had a lesson this day at this time");
                 }
             }
-            var students = await studentRepository.GetAllStudentsAsync();
-            model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
-            model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
+            // fills the selectLists in case the model returns invalid, so that we can see our choice again
+            await FillLists(model);
             return PartialView("_Edit", model);
         }
 
@@ -163,6 +172,16 @@ namespace NetCoreCalendar.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        /**
+        * Fills the selectLists in case the model returns invalid, so that we can see our choice again
+        **/
+        private async Task FillLists(LessonCreateVM model)
+        {
+            var students = await studentRepository.GetAllStudentsAsync();
+            model.Students = new SelectList(students, "Id", "FirstName", model.StudentId);
+            model.Rates = new SelectList(students, "Id", "Rate", model.StudentId);
         }
     }
 }

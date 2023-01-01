@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using NetCoreCalendar.Data;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
 
 namespace NetCoreCalendar.Models
 {
@@ -13,16 +11,13 @@ namespace NetCoreCalendar.Models
         [Required]
         [Display(Name = "Student")]
         public int StudentId { get; set; }
-
         [ForeignKey("StudentId")]
         // it represents that we are connected to the Student table
         public SelectList? Students { get; set; }
-
         public decimal? Rate { get; set; }
 
         [ForeignKey("StudentId")]
         public SelectList? Rates { get; set; }
-
         public string? Description { get; set; }
 
         [Required]
@@ -42,9 +37,12 @@ namespace NetCoreCalendar.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}")]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
-
         public bool IsPaid { get; set; }
 
+        /**
+         * Validates the Properties and shows the corresponding message to the user,
+         * in case the Start Time of the Lesson is bigger than the End Time or they are equal
+         **/
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (StartTime > EndTime)

@@ -5,10 +5,8 @@ namespace NetCoreCalendar.Contracts
 {
     public interface ILessonRepository : IGenericRepository<Lesson>
     {
-
         Task CreateLesson(LessonCreateVM model);
         Task<List<LessonDetailsVM>> GetAllLessonsAsync();
-
         Task<LessonsViewVM> GetMyLessonsAsync();
         Task<LessonDetailsVM?> GetLessonAsync(int? id);
         Task<List<LessonVM>> GetAllLessonsForCalendarAsync();

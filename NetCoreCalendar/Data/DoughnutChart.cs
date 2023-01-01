@@ -2,8 +2,8 @@
 {
     public class DoughnutChart
     {
-        public string StudentName { get; set; }
+        public string? StudentName { get; set; }
         public int Income { get; set; }
-        public string FormattedIncome { get; set; }
+        public string? FormattedIncome { get; set; }
     }
 }

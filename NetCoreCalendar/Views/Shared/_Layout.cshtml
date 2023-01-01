@@ -57,7 +57,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; @DateTime.Now.Year - Lesson Planner - WEB NET6 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; @DateTime.Now.Year - Lesson Planner - WEB NET6
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -71,37 +71,36 @@
         $(function () {
             $('.table').DataTable();
         });
-        
-            $('.deleteBtn').click(function (e) {
-                swal({
-                    text: "Are you sure you want to delete this record?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true
-                }).then((confirm) => {
-                    if (confirm) {
-                        var btn = $(this);
-                        var id = btn.data("id");
-                        $('#recordId').val(id);
-                        $('#deleteForm').submit();
-                    }
-                });
+        $('.deleteBtn').click(function (e) {
+            swal({
+                text: "Are you sure you want to delete this record?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true
+            }).then((confirm) => {
+                if (confirm) {
+                    var btn = $(this);
+                    var id = btn.data("id");
+                    $('#recordId').val(id);
+                    $('#deleteForm').submit();
+                }
             });
-            $('.paidBtn').click(function (e) {
-                swal({
-                    text: "Are you sure you want to change this record?",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true
-                }).then((confirm) => {
-                    if (confirm) {
-                        var btn = $(this);
-                        var id = btn.data("id");
-                        $('#lessonPaidId').val(id);
-                        $('#paidForm').submit();
-                    }
-                });
+        });
+        $('.paidBtn').click(function (e) {
+            swal({
+                text: "Are you sure you want to change this record?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true
+            }).then((confirm) => {
+                if (confirm) {
+                    var btn = $(this);
+                    var id = btn.data("id");
+                    $('#lessonPaidId').val(id);
+                    $('#paidForm').submit();
+                }
             });
+        });
 
     </script>
     @await RenderSectionAsync("Scripts", required: false)

@@ -6,7 +6,6 @@
         {
             Lessons = lessons;
         }
-
         public List<LessonDetailsVM> Lessons { get; set; }
     }
 }
