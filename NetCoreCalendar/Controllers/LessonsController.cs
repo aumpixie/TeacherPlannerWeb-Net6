@@ -109,10 +109,11 @@ namespace NetCoreCalendar.Controllers
             {
                 return NotFound();
             }
+            var isIncalendar = await lessonRepository.ExistsDate(model);
 
             if (ModelState.IsValid)
             {
-                if (await lessonRepository.ExistsDate(model) == false)
+                if (isIncalendar == false)
                 {
                     try
                     {
@@ -136,9 +137,11 @@ namespace NetCoreCalendar.Controllers
                     ModelState.AddModelError(string.Empty, "You have already had a lesson this day at this time");
                 }
             }
+
             await FillLists(model);
             return View(model);
         }
+            
 
 
         // POST: Lessons/Delete/5

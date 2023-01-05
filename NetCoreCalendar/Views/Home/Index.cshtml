@@ -141,6 +141,8 @@
             // POST
             $('#formSubmission').click(function (event) {
                 event.preventDefault();
+                var title = document.getElementById('exampleModal');
+                var information = document.getElementById('divToPopulate');
 
                 var form = $(this).parents('#exampleModal').find('form');
                 var actionUrl = form.attr('action');

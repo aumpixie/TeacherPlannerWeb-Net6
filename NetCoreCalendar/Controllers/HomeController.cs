@@ -144,6 +144,7 @@ namespace NetCoreCalendar.Controllers
                     ModelState.AddModelError(string.Empty, "You have already had a lesson this day at this time");
                 }
             }
+            
             // fills the selectLists in case the model returns invalid, so that we can see our choice again
             await FillLists(model);
             return PartialView("_Edit", model);

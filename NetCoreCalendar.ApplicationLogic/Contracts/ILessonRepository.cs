@@ -15,5 +15,6 @@ namespace NetCoreCalendar.ApplicationLogic.Contracts
         Task UpdateLessonAsync(LessonCreateVM model);
         Task<LessonCreateVM?> GetLessonToUpdateAsync(int? id);
         Task<bool> ExistsDate(LessonCreateVM model);
+        Task<LessonVM> CheckLessonDate(DateTime startDate);
     }
 }

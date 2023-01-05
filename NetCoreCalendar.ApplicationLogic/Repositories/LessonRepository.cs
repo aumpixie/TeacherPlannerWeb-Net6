@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -56,30 +57,41 @@ namespace NetCoreCalendar.Repositories
         }
 
         /**
-         * Checks if the lesson with the same date and time already exists in our database,
-         * returns false if there is no such lesson, and true otherwise
+         * Returns false if there is no lesson for the existing date and time, and true otherwise
          **/
         public async Task<bool> ExistsDate(LessonCreateVM model)
         {
-            // we find the user that is currently using the app
-            var user = await studentRepository.GetUserRecords();
-
             // combine all the DateTime properties that the user mentioned in the model into one DateTime variable
             DateTime newDateTimeStart = new DateTime(model.StartDate.Year, model.StartDate.Month, model.StartDate.Day,
                                    model.StartTime.Hour, model.StartTime.Minute, model.StartTime.Second);
-            var lessonOriginal = mapper.Map<Lesson>(model);
+            LessonVM lesson = await CheckLessonDate(newDateTimeStart);
 
-            // looks for the lesson, with the abovementioned date, in the database
-            var lesson = await context.Lessons
-              .Where(q => q.RequestingUserId == user.Id)
-              .Include(l => l.Student)
-              .FirstOrDefaultAsync(m => m.Start == newDateTimeStart);
-
-            if(lesson != null)
+            // checks the id to make sure that user wants to edit the lesson, not creates a new one for the existing date and time
+            if (lesson != null && model.Id != lesson.Id)
             {
                 return true;
             }
             return false;
+        }
+
+
+        /*
+         * Checks if a lesson with the same date and time already exists in our database
+         */
+
+        public async Task<LessonVM> CheckLessonDate(DateTime startDate)
+        {
+
+            // we find the user that is currently using the app
+            var user = await studentRepository.GetUserRecords();
+            var lesson = await context.Lessons
+                  .AsNoTracking()
+                  .Where(q => q.RequestingUserId == user.Id)
+                  .Include(l => l.Student)
+                  .FirstOrDefaultAsync(m => m.Start == startDate);
+ 
+            var model = mapper.Map<LessonVM>(lesson);
+            return model;
         }
 
         /**
